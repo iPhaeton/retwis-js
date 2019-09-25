@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const {getNextUserId, getRandomHash, trimUser} = require('./utils');
-const {hget, createHash} = require('../redis');
+const {hget, createHash, hset} = require('../redis');
 
 router.use(bodyParser.json());
 
@@ -18,9 +18,10 @@ router.post('/signup', async (req, res, next) => {
         });
     }
 
-    const nextUserId = await getNextUserId();
+    const userId = await getNextUserId();
     const hash = getRandomHash();
-    const user = await createHash(`user:${nextUserId}`, {
+    await hset('users', username, userId)
+    const user = await createHash(`user:${userId}`, {
         username,
         password,
         hash,
