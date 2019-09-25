@@ -1,10 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const bodyParser = require('body-parser');
 const {getNextUserId, getRandomHash, trimUser} = require('./utils');
 const {hget, createHash, hset, hgetall} = require('../redis');
-
-router.use(bodyParser.json());
 
 router.post('/signup', async (req, res, next) => {
     const {username, password} = req.body;

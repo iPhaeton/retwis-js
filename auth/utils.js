@@ -16,8 +16,14 @@ const trimUser = (user) => {
     return userData;
 }
 
+const trimPassword = (user) => {
+    const {password, ...userData} = user;
+    return userData;
+}
+
 module.exports = {
     getNextUserId,
     getRandomHash,
     trimUser,
+    trimPassword,
 }

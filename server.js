@@ -3,7 +3,12 @@ const app = express()
 const authRoutes = require('./auth/routes');
 const {setnx} = require('./redis');
 const {PORT} = require('./config');
+const {authGuard} = require('./auth/guards');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 
+app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(authRoutes);
 
 app.listen(PORT, async () => {
@@ -12,16 +17,8 @@ app.listen(PORT, async () => {
 });
 
 app.get('/', 
+    authGuard,
     (req, res, next) => {
-        console.log('!!!1')
-        next()
-    },
-    (req, res, next) => {
-        console.log('!!!2')
-        next()
-    },
-    (req, res, next) => {
-        console.log('!!!3')
-        res.send('ok')
+        res.json(req.user);
     }
 )
