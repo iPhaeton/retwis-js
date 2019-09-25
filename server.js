@@ -4,11 +4,14 @@ const port = 3000;
 const redis = require("redis");
 const client = redis.createClient();
 const {promisify} = require("util");
+const authRoutes = require('./auth/routes');
 
 const set = promisify(client.set).bind(client);
 const get = promisify(client.get).bind(client);
 const del = promisify(client.del).bind(client);
 const incr = promisify(client.incr).bind(client);
+
+app.use(authRoutes);
 
 app.listen(port, async () => {
     let nextUserId = null
