@@ -33,5 +33,6 @@ module.exports = {
     hget,
     hset,
     hmset,
+    hgetall,
     createHash,
 }
