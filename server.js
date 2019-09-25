@@ -1,14 +1,14 @@
 const express = require('express');
 const app = express()
-const port = 3000;
 const authRoutes = require('./auth/routes');
 const {setnx} = require('./redis');
+const {PORT} = require('./config');
 
 app.use(authRoutes);
 
-app.listen(port, async () => {
+app.listen(PORT, async () => {
     await setnx('nextUserId', 0);
-    console.log(`Redis app listening on port ${port}!`);
+    console.log(`Redis app listening on port ${PORT}!`);
 });
 
 app.get('/', 
