@@ -1,26 +1,13 @@
 const express = require('express');
 const app = express()
 const port = 3000;
-const redis = require("redis");
-const client = redis.createClient();
-const {promisify} = require("util");
 const authRoutes = require('./auth/routes');
-
-const set = promisify(client.set).bind(client);
-const get = promisify(client.get).bind(client);
-const del = promisify(client.del).bind(client);
-const incr = promisify(client.incr).bind(client);
+const {setnx} = require('./redis');
 
 app.use(authRoutes);
 
 app.listen(port, async () => {
-    let nextUserId = null
-    await set('nextUserId', 0)
-    nextUserId = await get('nextUserId');
-    console.log(nextUserId);
-    nextUserId = await incr('nextUserId');
-    console.log(nextUserId);
-
+    await setnx('nextUserId', 0);
     console.log(`Redis app listening on port ${port}!`);
 });
 
@@ -38,5 +25,3 @@ app.get('/',
         res.send('ok')
     }
 )
-
-client.set('foo', 'bar')
