@@ -9,6 +9,7 @@ const incr = promisify(client.incr).bind(client);
 const setnx = promisify(client.setnx).bind(client);
 const hget = promisify(client.hget).bind(client);
 const hset = promisify(client.hset).bind(client);
+const hdel = promisify(client.hdel).bind(client);
 const hmset = promisify(client.hmset).bind(client);
 const hgetall = promisify(client.hgetall).bind(client);
 
@@ -32,6 +33,7 @@ module.exports = {
     setnx,
     hget,
     hset,
+    hdel,
     hmset,
     hgetall,
     createHash,

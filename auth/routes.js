@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const {getNextUserId, getRandomHash, trimUser} = require('./utils');
-const {hget, createHash, hset, hgetall} = require('../redis');
+const {hget, hdel, createHash, hset, hgetall} = require('../redis');
+const {authGuard} = require('./guards');
 
 router.post('/signup', async (req, res, next) => {
     const {username, password} = req.body;
@@ -45,6 +46,18 @@ router.post('/signin', async (req, res, next) => {
     res
     .set('Set-Cookie', `auth=${user.hash}`)
     .json(trimUser(user));
-})
+});
+
+router.post(
+    '/logout',
+    authGuard,
+    async (req, res, next) => {
+        const {id, hash} = req.user;
+        const newHash = getRandomHash()
+        await hset(`user:${id}`, 'hash', newHash);
+        await hdel('auth', hash);
+        res.json({success: true});
+    },
+)
 
 module.exports = router;
